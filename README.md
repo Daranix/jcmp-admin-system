@@ -9,4 +9,11 @@ Command | Description
 --- | --- 
 `/aban` | *Ban a specified player* 
 `/akick` | *Kick a specified player* 
-1 | 2 
+
+<dl>
+  <dt>Definition list</dt>
+  <dd>Is something people use sometimes.</dd>
+
+  <dt>Markdown in HTML</dt>
+  <dd>Does *not* work **very** well. Use HTML <em>tags</em>.</dd>
+</dl>
