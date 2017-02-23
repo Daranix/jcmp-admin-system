@@ -7,5 +7,6 @@
 
 Command | Description 
 --- | --- 
-*Still* | `renders` 
+`/aban` | *Ban a specified player* 
+`/akick` | *Kick a specified player* 
 1 | 2 
