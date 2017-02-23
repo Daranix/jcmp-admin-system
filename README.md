@@ -12,6 +12,8 @@ Command | Description
 
 <table>
   <tr>
-    <td>Test</td>
+    <th>Test</th>
+    <th>Test</th>
+    <th><b>Test</b></th>
   </tr>
 </table>
