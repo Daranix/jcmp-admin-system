@@ -16,4 +16,5 @@ Command | Description
     <th>Test</th>
     <th><b>Test</b></th>
   </tr>
+  <tr><td><b>asdsda</b></td></tr>
 </table>
