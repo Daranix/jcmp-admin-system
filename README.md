@@ -3,7 +3,9 @@
 ### ATTENTION: FOR RUN THIS PACKAGE U NEED [Just Cause multiplayer Toast Package](https://github.com/Daranix/jcmp-toast)
 
 
-Markdown | Less | Pretty
---- | --- | ---
-*Still* | `renders` | **nicely**
-1 | 2 | 3
+#### Commands list
+
+Command | Description 
+--- | --- 
+*Still* | `renders` 
+1 | 2 
