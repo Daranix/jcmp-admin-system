@@ -5,11 +5,6 @@
 
 #### Commands list
 
-Command | Description 
---- | --- 
-`/aban` | *Ban a specified player* 
-`/akick` | *Kick a specified player* 
-
 <table>
   <tr>
     <th>Test</th>
