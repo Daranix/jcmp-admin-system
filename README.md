@@ -7,7 +7,8 @@
 * [Features](#pkgfeatures)
 * [Configuration](#pkgconfig)
 * [List of commands](#listcmd)
-* [License](#)
+* [License](https://github.com/Daranix/jcmp-admin-system)
+* [Debug commands](https://github.com/Daranix/jcmp-projects-debug-commands/tree/master/adminsys)
 
 #### Features
 
@@ -19,13 +20,13 @@
 * List of banned players
 * Complete admin panel inside the game for all of this features
 
-##### You can check all this features from the next video
+##### You can check all this features from this video:
 
 Coming soon
 
 #### Configuration
 
-1. Install the required elements using `npm install` on the package folder
+1. Install the required dependencies with `npm install` on the package folder
 2. Install mongo db
 3. Configure the `config.js` file inside the package folder
 
