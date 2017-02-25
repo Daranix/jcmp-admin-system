@@ -5,8 +5,8 @@
 
 #### Info about the package:
 
-* [Features](#pkgfeatures)
-* [Configuration](#pkgconfig)
+* [Features](#features)
+* [Configuration](#configuration)
 * [List of commands](#listcmd)
 * [License](https://github.com/Daranix/jcmp-admin-system)
 * [Debug commands](https://github.com/Daranix/jcmp-projects-debug-commands/tree/master/adminsys)
