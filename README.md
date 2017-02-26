@@ -8,7 +8,7 @@
 * [Features](#features)
 * [Configuration](#configuration)
 * [List of commands](#list-of-commands)
-* [License](https://github.com/Daranix/jcmp-admin-system)
+* [License](https://github.com/Daranix/jcmp-admin-system/blob/master/LICENSE)
 * [Debug commands](https://github.com/Daranix/jcmp-projects-debug-commands/tree/master/adminsys)
 
 #### Features
