@@ -23,8 +23,9 @@
 
 ##### You can check all this features from this video:
 
-Coming soon
-
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=Vj0NEKKYBgE
+" target="_blank"><img src="http://img.youtube.com/vi/Vj0NEKKYBgE/0.jpg" 
+alt="Admin menu showcase" width="240" height="180" border="10" /></a>
 #### Configuration
 
 1. Install the required dependencies with `npm install` on the package folder
