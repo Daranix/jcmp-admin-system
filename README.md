@@ -1,5 +1,7 @@
 # Just Cause 3 nanos Multiplayer Admin tools
 
+![adminsystem](https://cloud.githubusercontent.com/assets/13921690/23340704/47cef4e8-fc3b-11e6-8736-584663b8f3a1.png)
+
 ### ATTENTION: This plugin requires the use of [Just Cause 3 Toast package](https://github.com/Daranix/jcmp-toast)
 ### REPORT ISSUES HERE: [ISSUES](https://github.com/Daranix/jcmp-admin-system/issues)
 
