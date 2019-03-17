@@ -1,12 +1,13 @@
-<div id="adminPanel" class="modal fade" tabindex="-1" role="dialog">
+
+  <div id="adminPanel" class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content adminPanel_content">
-      <div class="modal-header" ng-controller="header">
+      <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Welcome {{adm.localPlayer.name}} </h4>
+        <h4 id="welcomeMsg" class="modal-title"></h4>
       </div>
       <div class="modal-body">
-        <div ng-controller="tabsController">
+        <div>
           <ul class="nav nav-tabs" id="navtabs-menu">
             <li class="active"><a data-toggle="tab" href="#actions">Actions</a></li>
             <li ng-click="reqUpdateBans()"><a data-toggle="tab" href="#banlist">Ban List</a></li>
@@ -17,21 +18,19 @@
 
         <div class="tab-content">
 
-          <div id="actions" class="tab-pane fade in active" ng-controller="actions">
+          <div id="actions" class="tab-pane fade in active">
 
             <div class="row">
-              <div class="col-md-6 playerList">
+              <div class="col-md-6 playerList" id="playerList">
 
                 <div class="playerList-head">
                   <span class="little-title">Player list:</span>
-                  <button type="button" class="btn btn-primary btn-sm refreshBtn" style="float: right; font-weight:bold;" ng-click="refreshPlayerList()"><span class="glyphicon glyphicon-refresh fa-spin-hover" aria-hidden="true"></span>&nbsp;Refresh</button>
+                  <button type="button" class="btn btn-primary btn-sm refreshBtn" style="float: right; font-weight:bold;" v-on:click="refreshPlayerList()"><span class="glyphicon glyphicon-refresh fa-spin-hover" aria-hidden="true"></span>&nbsp;Refresh</button>
                 </div>
 
                 <div class="playerList-content">
                 <ul class="vertical-menu-list column">
-                  <ng-repeat ng-repeat="option in adm.players">
-                    <li playerId="{{option.networkId}}" ng-click="playerSelected($event)">{{option.name}}</li>
-                  </ng-repeat>
+                  <li v-for="(player, index) in playerList" :playerId="player.networkId" v-on:click="selectPlayer(index)" class="listPlayers">{{player.name}}</li>
                 </ul>
                 </div>
               </div>
@@ -43,15 +42,15 @@
                   <table class="table_playerInfo">
                     <tr>
                       <td>Player name:</td>
-                      <td>{{adm.selectedPlayer.name}}</td>
+                      <td>{{selectedPlayer.name}}</td>
                     </tr>
                     <tr>
                       <td>Network ID:</td>
-                      <td>{{adm.selectedPlayer.networkId}}</td>
+                      <td>{{selectedPlayer.networkId}}</td>
                     </tr>
                     <tr>
                       <td>Admin rank:</td>
-                      <td>{{adm.selectedPlayer.adminlevel}}</td>
+                      <td>{{selectedPlayer.adminlevel}}</td>
                     </tr>
                   </table>
 
@@ -60,18 +59,16 @@
             </div>
 
             <div class="modal-footer">
-              <div class="OptionsBox">
+              <div class="OptionsBox" id="OptionsBox">
                 <ul class="vertical-menu-list">
-                  <ng-repeat ng-repeat="option in footerOptions">
-                    <li optionId="{{$index}}" ng-click="executeAction($event, selectedPlayer)">{{option.name}}</li>
-                  </ng-repeat>
+                    <li v-for="(option, index) in footerOptions" optionId="index" v-on:click="executeAction($event, index)">{{option.name}}</li>
                 </ul>
               </div>
             </div>
 
           </div>
 
-          <div id="banlist" class="tab-pane fade" ng-controller="banlist">
+          <div id="banlist" class="tab-pane fade">
             <div class="banlist-header row">
               <div class="col-md-6">
                 <h3>List of banned players</h3>
@@ -86,7 +83,7 @@
                 -->
                 <div class="input-group input-group-sm">
                   <span class="input-group-addon" id="sizing-addon3"><b>Search</b></span>
-                  <input type="text" class="form-control" placeholder="Name/SteamID" ng-model="searchValue" ng-change="searchPlayer()" aria-describedby="sizing-addon3">
+                  <input type="text" class="form-control" placeholder="Name/SteamID" v-model="searchPlayer" aria-describedby="sizing-addon3">
                   <div class="input-group-btn">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span id="filterType">Name</span> <span class="caret"></span></button>
                     <ul class="dropdown-menu filterSelector">
@@ -110,19 +107,19 @@
                 </thead>
 
                 <tbody>
-                  <tr ng-hide="players_banlist.length">
+                  <tr v-show="!players_banlist.length">
                     <td colspan=4>No bans to show</td>
                   </tr>
-                  <tr ng-repeat="player in players_banlist" ng-click="banDetails($index)">
-                    <td>{{player.name}}</td>
-                    <td>{{player.steamId}}</td>
-                    <td>{{ player.date_start | date: 'medium' }}</td>
+                  <tr v-for="(player, index) in players_banlist" v-on:click="banDetails(index)">
+                    <td>{{ player.name}}</td>
+                    <td>{{ player.steamId}}</td>
+                    <td>{{ player.date_start }}</td>
                     <td>
-                      <div ng-if="player.date_end == 0">
+                      <div v-if="player.date_end == 0">
                         Permanent
                       </div>
-                      <div ng-if="player.date_end >= 1">
-                        {{ player.date_end | date: 'medium' }}
+                      <div v-if="player.date_end >= 1">
+                        {{ player.date_end }}
                       </div>
                     </td>
                   </tr>
@@ -130,29 +127,29 @@
 
               </table>
             </div>
-
+            
             <div id="banDetails" style="display:none;">
               <table class="banDetails">
                 <tr>
                   <td>Name</td>
-                  <td>{{bannedPlayer_info.name}}</td>
+                  <td>{{ bannedPlayer_info.name }}</td>
                 </tr>
                 <tr>
                   <td>SteamID:</td>
-                  <td>{{bannedPlayer_info.steamId}}</td>
+                  <td>{{ bannedPlayer_info.steamId }}</td>
                 </tr>
                 <tr>
                   <td>Ban day:</td>
-                  <td>{{ bannedPlayer_info.date_start | date: 'medium' }}</td>
+                  <td>{{ bannedPlayer_info.date_start }}</td>
                 </tr>
                 <tr>
                   <td>Ban expiration:</td>
                   <td>
-                    <div ng-if="bannedPlayer_info.date_end == 0">
+                    <div v-if="bannedPlayer_info.date_end == 0">
                       Never (Permanent)
                     </div>
-                    <div ng-if="bannedPlayer_info.date_end >= 1">
-                      {{ bannedPlayer_info.date_end | date: 'medium' }}
+                    <div v-if="bannedPlayer_info.date_end >= 1">
+                      {{ bannedPlayer_info.date_end }}
                     </div>
                   </td>
                 </tr>
@@ -169,6 +166,7 @@
                 </p>
               </div>
             </div>
+            
           </div>
 
           <div id="spawnmenu" class="tab-pane fade">
@@ -177,10 +175,20 @@
               <h3>Spawn Menu</h3>
 
               <ul class="nav nav-tabs" id="spawnTabs">
+                <li v-for="(category, index) in categories"><a :href="refCategory(category)" data-toggle="tab">{{ category }}</a></li>
               </ul>
             </div>
 
             <div class="tab-content" id="spawnTabsContent">
+              <div v-for="category in categories" class="tab-pane fade in" :id="refCategory(category).replace('#','')">
+                <h3>{{ category }}s</h3>
+                <ul class="vertical-menu-list column">
+                  <li v-for="vehicle in getVehicles(category)" class="list-vehicles" v-on:click="spawnVehicle(vehicle.hash)" data-toggle="tooltip" data-placement="left" :title="generateTooltip(vehicle)">
+                    <span class="vname">{{ vehicle.name }}</span>
+                    <span class="vmodel hidden">{{ vehicle.model_name }}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
 
           </div>

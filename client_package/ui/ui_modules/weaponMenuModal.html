@@ -13,22 +13,22 @@
           <label class="sr-only" for="weaponAmmo">Ammo</label>
           <div class="input-group">
             <div class="input-group-addon"><b>Ammo</b></div>
-            <input type="number" class="form-control" id="weaponAmmo" placeholder="300" value="300" ng-model="ammoQuantity">
+            <input type="number" class="form-control" id="weaponAmmo" placeholder="300" value="300" v-model="ammoQuantity">
           </div>
         </div>
         <hr>
-        <div id="weaponContainer" ng-controller="spawnMenuControl">
+        <div id="weaponContainer">
           <i>Click on the weapon to give it</i>
-          <ng-repeat ng-repeat="category in weapon_groups">
+          <div v-for="category in weapon_groups">
             <h3>{{ category.asTitle() }}</h3>
             <ul class="vertical-menu-list">
-              <li ng-repeat="wp in weaponsGrouped[category] " ng-click="spawnWeapon(wp.hash)"> {{ wp.name }} </li>
+              <li v-for="wp in weaponsGrouped[category] " v-on:click="spawnWeapon(wp.hash)"> {{ wp.name }} </li>
             </ul>
-          </ng-repeat>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<script src="./js/spawnMenu_weapons.js" type="text/javascript-lazy"></script>
+<script src="./js/spawnMenu_weapons.js" type="text/javascript"></script>

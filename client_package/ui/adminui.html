@@ -7,39 +7,40 @@
 
   <link rel="stylesheet" href="./css/global.css">
   <link rel="stylesheet" href="./lib/bootstrap/css/bootstrap.min.css">
-  <script src="./lib/angular.min.js"></script>
+
+  <script src="./lib/vue.min.js"></script>
   <script src="./lib/jquery/jquery-3.1.1.min.js"></script>
-
-  <!--
-  <script src="package://jcmp-toast/ui/jquery/jquery-3.1.1.min.js"></script>
-  -->
+  
   <script src="./lib/bootstrap/js/bootstrap.min.js"></script>
-
-  <link rel="stylesheet" href="./lib/bootstrap-dialog/bootstrap-dialog.min.css">
-  <script src="./lib/bootstrap-dialog/bootstrap-dialog.min.js"></script>
-
-  <script src="./js/utils.js"></script>
-  <script src="./js/hashes.js"></script>
-  <script src="./js/actions.js"></script>
-
-  <script src="./js/panelScript.js"></script>
-
-</head>
-<body ng-app="AdminPanel">
-
-  <ng-include src="'./ui_modules/mainPanel.html'"></ng-include>
-  <ng-include src="'./ui_modules/confirmModals.html'"></ng-include>
-  <ng-include src="'./ui_modules/weaponMenuModal.html'"></ng-include>
-
-  <!-- Action confirm modals html -->
 
   <script src="./js/startup.js"></script>
 
-  <script type="text/javascript">
-  $(document).ready(function() {
-    //$('#adminPanel').modal({backdrop: 'static', keyboard: false});
-    console.log("Admin ui ready");
+  
+  <link rel="stylesheet" href="./lib/bootstrap-dialog/bootstrap-dialog.min.css">
+  <script src="./lib/bootstrap-dialog/bootstrap-dialog.min.js"></script>
+
+  
+  <script src="./js/utils.js"></script>
+  <script src="./js/hashes.js"></script>
+  <script src="./js/actions.js"></script>
+  <script src="./js/panelScript_v2.js"></script>
+  
+
+</head>
+<body>
+
+  <div include-html="./ui_modules/mainPanel.html"></div>
+  <div include-html="./ui_modules/confirmModals.html"></div>
+  <div include-html="./ui_modules/weaponMenuModal.html"></div>
+
+
+  <script>
+
+  includeHTML(function() {
+    loadVue();
   });
+  
   </script>
+
 </body>
 </html>

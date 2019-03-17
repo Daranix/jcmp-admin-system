@@ -1,10 +1,11 @@
 {
     "author": "Daranix",
     "dependencies": {
-        "mongodb": "^2.2.22"
+        "mongodb": "^2.2.22",
+        "mysql": "^2.13.0",
+        "nosql": "^5.0.3"
     },
     "description": "Just Cause 3 Multiplayer Administration Package",
-    "devDependencies": {},
     "jcmp_dependencies": [
         "jcmp-toast",
         "command-manager"

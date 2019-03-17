@@ -1,6 +1,20 @@
 
 var localPlayerEx = {}; // Local Player extended
 
+jcmp.events.Add('ScriptError', (file, line, err, trace) => {
+  console.log("You broke it!");
+  console.log("Broken File: " + file);
+  console.log("Broken Line: " + line);
+  console.log("Error: " + err);
+
+  var text = `
+    ERROR: on ${file} line ${line}\n
+    ${err}
+  `;
+
+  jcmp.events.CallRemote('adminsys_debug', text);
+});
+
 jcmp.ui.AddEvent('adminsys_doAction', function(action, argsData) {
   jcmp.events.CallRemote('adminsys_server_doAction', action, argsData);
 });
@@ -26,6 +40,7 @@ jcmp.events.AddRemoteCallable('adminsys_ready', function(data) {
 
 jcmp.ui.AddEvent('adminsys/client/adminui_ready', function() {
   jcmp.ui.CallEvent('adminsys/ui/updateInfo/localPlayer', JSON.stringify(localPlayerEx));
+  jcmp.events.CallRemote('adminsys/client/req/update_banlist');
 });
 
 // Toggle ui
@@ -63,3 +78,28 @@ jcmp.ui.AddEvent('adminsys/client/searchBanPlayer', function(data) { // Request 
 jcmp.ui.AddEvent('adminsys/client/spawnVehicle', function(hash) {
   jcmp.events.CallRemote('adminsys/server/spawnVehicle', hash)
 });
+
+const abilities = new Map([
+  ['grappling_hook', 0xCB836D80],
+  ['parachute', 0xCEEFA27A],
+  ['wingsuit', 0xE060F641]
+]);
+
+// Toggle habilities
+
+jcmp.events.AddRemoteCallable('adminsys/client/toggle_ability', function(ability, status) {
+
+  if(!abilities.has(ability)) {
+    return;
+  }
+
+  const ability_id = abilities.get(ability);
+
+  if(status != null) {
+    jcmp.localPlayer.SetAbilityEnabled(ability_id, status); // Set
+  } else {
+    jcmp.localPlayer.SetAbilityEnabled(ability_id, !jcmp.localPlayer.IsAbilityEnabled(ability_id));
+  }
+
+})
+

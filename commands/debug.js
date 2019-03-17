@@ -20,10 +20,6 @@ module.exports = ({ Command, manager }) => {
 
   }))
 
-  .add(new Command('exit').description('Kick yourself to the main menu').handler(function(player, target) {
-    player.Kick('leave');
-  }))
-
   .add(new Command('createRandomBans').description('Insert random people into the banlist').handler(function(player) {
 
       //Creates a first name with 2-3 syllables

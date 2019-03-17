@@ -72,7 +72,7 @@ Action.banPlayer = function(player, data) {
               hideAfter: 3000
           });
           return;
-          break;
+          //break;
       } // End switch
       time = Date.now() + banEndMs;
     } else {
@@ -81,7 +81,7 @@ Action.banPlayer = function(player, data) {
 
 
     var banData = {
-      name: target.name, // FIXME maybe need to escape the nametag!
+      name: target.escapedNametagName,
       steamId: target.client.steamId,
       reason: data.reason,
       bannedby: {
@@ -95,48 +95,7 @@ Action.banPlayer = function(player, data) {
     //console.log("Ban Data:");
     //console.log(banData);
 
-    adminsys.mongodb.connect(adminsys.config.mongodb.url, function(err, db) {
-
-      // If is admin delete from admin list
-
-      if(player.admin.rank >= 1) {
-        var admcollection = db.collection('admins');
-        admcollection.deleteOne({ steamId: target.client.steamId}, function(err, result) {
-          db.close();
-        });
-      }
-
-      var collection = db.collection('banlist');
-      // Insert ban
-      collection.insertOne(banData, function(err, result) {
-        var banTime;
-
-        if(parseInt(data.time) === 0) {
-          banTime = 'permanent';
-        } else {
-          banTime = data.time + " " + data.timeType;
-        }
-
-        var banText = `${player.escapedNametagName} banned ${target.escapedNametagName}. ` + banTime + " " + (data.reason.length > 0 ? `Reason: ${data.reason}` : '');
-
-        var banToastText = `<b>${player.escapedNametagName}<b> banned you ${banTime} <br>` + (data.reason.length > 0 ? `REASON: ${data.reason}` : '');
-
-        jcmp.events.Call('toast_show', target, {
-            heading: 'Banned',
-            text:  banToastText,
-            icon: 'error',
-            loader: true,
-            loaderBg: '#9EC600',
-            position: 'mid-center',
-            hideAfter: 4500
-        });
-
-        adminsys.chat.broadcast(banText, adminsys.config.colours.orange);
-        adminsys.workarounds.watchPlayer(target, setTimeout(() => target.Kick(data.reason), 5000));
-        console.log(banText);
-        db.close();
-      });
-    });
+    adminsys.databaseSys.actions.banPlayer(player, target, data, banData);
 
 } // End of ban player action
 
@@ -161,6 +120,16 @@ Action.kickPlayer = function(player, data) {
   }
 
   var target = res[0];
+
+  jcmp.events.Call('toast_show', target, {
+      heading: 'Kicked',
+      text:  `<b>${player.escapedNametagName}</b> kicked you <br>` + (data.reason.length > 0 ? ` <b>Reason:</b> <i>${data.reason}</i>` : ''),
+      icon: 'error',
+      loader: true,
+      loaderBg: '#9EC600',
+      position: 'mid-center',
+      hideAfter: 4500
+  });
 
   adminsys.chat.broadcast(`${player.escapedNametagName} kicked ${target.escapedNametagName}.` + (data.reason.length > 0 ? ` Reason: ${data.reason}` : ''), adminsys.config.colours.orange);
   adminsys.workarounds.watchPlayer(target, setTimeout(() => target.Kick(data.reason), 5000));
@@ -207,7 +176,7 @@ Action.setAdminRank = function(player, data) {
   if(target.admin.rank === data.rank) {
     jcmp.events.Call('toast_show', player, {
         heading: 'Error',
-        text: 'You already have that rank!',
+        text: 'This player already have that rank!',
         icon: 'error',
         loader: true,
         loaderBg: '#9EC600',
@@ -218,51 +187,15 @@ Action.setAdminRank = function(player, data) {
   }
 
   // Insert new Admin
+  /*
+  if(!adminsys.config.useDatabase) {
+    adminsys.config.admins.push(target.client.steamId);
+    return;
+  }*/
 
-  adminsys.mongodb.connect(adminsys.config.mongodb.url, function(err, db) {
 
-    // Get the documents collection
-    var collection = db.collection('admins');
-    // Insert some documents
+  adminsys.databaseSys.actions.setAdminRank(target, data);
 
-    collection.find({ steamId: target.client.steamId }).toArray(function(err, result) {
-
-      if(err) {
-        console.error(err);
-        db.close();
-        return;
-      }
-
-      if(result.length == 0) {
-        // Insert admin
-        if(data.rank >= 1) {
-          collection.insertOne({ name: target.name, rank: data.rank, steamId: target.client.steamId }, function(err, result) {
-            console.log("Added admin to the database")
-            db.close();
-          });
-        }
-      } else {
-        if(data.rank === 0) {
-          // Delete from admin table
-          collection.deleteOne({ steamId: target.client.steamId}, function(err, result) {
-            console.log("Deleted admin from table");
-            db.close();
-          });
-        } else {
-          // Update from admin table
-          collection.updateOne({ steamId: target.client.steamId }, { $set: { rank: data.rank }}, function(err, result) {
-            console.log("Updated admin rank!");
-            db.close();
-          });
-        }
-      }
-
-      target.admin.rank = data.rank;
-
-      db.close();
-
-    });
-  });
 }
 
 // --- TP PLAYER --- //
@@ -320,7 +253,7 @@ Action.setHP = function(player, data) {
 
   target.health = data.hp;
 
-  jcmp.events.Call('toast_show', target, {
+  jcmp.events.Call('toast_show', player, {
       heading: 'Action completed',
       text: `${target.escapedNametagName} HP is now ${target.health}`,
       icon: 'success',
@@ -345,21 +278,12 @@ Action.unbanPlayer = function(player, targetData) {
   var target = JSON.parse(targetData);
   console.log(target);*/
 
-  adminsys.mongodb.connect(adminsys.config.mongodb.url, function(err, db) {
+  /*
+  if(!adminsys.config.useDatabase) {
+    return;
+  }*/
 
-    var collection = db.collection('banlist');
-
-    collection.deleteOne({ steamId: targetData.steamId.toString() }, function(err, result) { // Limited to 35 more can crash server
-      //console.log(result);
-      if(!err) {
-        //jcmp.events.CallRemote('adminsys/server/res/update_banlist', player, JSON.stringify(result));
-        console.log(result.result.n);
-        // FIXME Add msg to cnfirm the ban
-      }
-      db.close();
-    });
-  });
-
+  adminsys.databaseSys.actions.unbanPlayer(targetData);
 
 }
 
@@ -398,5 +322,74 @@ Action.spawnWeapon = function(player, data) {
 
   var target = res[0];
   target.GiveWeapon(data.hash, data.ammo, true);
+
+}
+
+Action.toggleAbility = function(player, data) {
+  
+    if (player.admin.rank < 1) {
+      errMsg.NO_PERMISSION(player);
+      return;
+    }
+
+    var validAbility = ['wingsuit', 'parachute', 'grappling_hook'];
+
+    if(validAbility.indexOf(data.ability) < 0) {
+      console.log("ERROR: Invalid ability type")
+      return;
+    }
+
+    var res = adminsys.utils.getPlayer(data.networkId.toString());
+    if (res.length === 0) {
+      errMsg.NO_PLAYER(player);
+      return;
+    }
+
+    if(res.length >= 2) {
+      errMsg.MORE_THAN_ONE(player);
+      return;
+    }
+
+    var target = res[0];
+    //console.log(target);
+    console.log(data.ability);
+    jcmp.events.CallRemote('adminsys/client/toggle_ability', target, data.ability);
+    
+
+}
+
+Action.toggleGodmode = function(player, data) {
+
+  if (player.admin.rank < 1) {
+    errMsg.NO_PERMISSION(player);
+    return;
+  }
+
+  var res = adminsys.utils.getPlayer(data.networkId.toString());
+  if (res.length === 0) {
+    errMsg.NO_PLAYER(player);
+    return;
+  }
+
+  if(res.length >= 2) {
+    errMsg.MORE_THAN_ONE(player);
+    return;
+  }
+
+  var target = res[0];
+  var currentStatus = !target.invulnerable; // Why? beacuse the server need a little bit of time for update the info
+  target.invulnerable = currentStatus;
+
+  jcmp.events.Call('toast_show', player, {
+      heading: 'Action completed',
+      text: `turned godmode for ${target.escapedNametagName} ` + ((currentStatus) ? 'ON' : 'OFF'),
+      icon: 'success',
+      loader: true,
+      loaderBg: '#9EC600',
+      position: 'top-right',
+      hideAfter: 3000
+  });
+
+
 
 }

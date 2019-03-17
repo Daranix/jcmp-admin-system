@@ -219,8 +219,16 @@ Action.setAdminRank = function(player) {
   });
 }
 
-Action.setHabilities = function(player) {
+/*Action.setHabilities = function(player, hability) {
   // Coming soon
+}*/
+
+Action.toggleAbility = function(player, ability) {
+
+    console.log(player);
+    console.log(ability);
+
+    jcmp.CallEvent('adminsys_doAction', 'toggleAbility', JSON.stringify({ ability: ability, networkId: player.networkId }))
 }
 
 
@@ -268,4 +276,8 @@ Action.spawnWeapon = function(target, hash, ammo) {
 
   console.log(data);
   jcmp.CallEvent('adminsys_doAction', 'spawnWeapon', JSON.stringify(data));
+}
+
+Action.toggleGodmode = function(target) {
+    jcmp.CallEvent('adminsys_doAction', 'toggleGodmode', JSON.stringify(target));
 }

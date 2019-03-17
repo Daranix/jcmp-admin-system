@@ -121,7 +121,7 @@ body {
 .OptionsBox .vertical-menu-list li {
   display: inline-block;
   width: auto;
-  margin:0px;
+  margin-right:2px;
 }
 
 .modal-footer {

@@ -7,7 +7,7 @@ jcmp.events.AddRemoteCallable('adminsys_server_doAction', function(player, actio
     // Do action
     //console.log(data);
     //console.log(typeof(data));
-    adminsys.actions[action](player, JSON.parse(data)); // FIXME
+    adminsys.actions[action](player, JSON.parse(data)); 
   } else {
 
     // Toast with error
@@ -39,20 +39,8 @@ jcmp.events.AddRemoteCallable('adminsys/server/client_request_update_playerList'
 });
 
 jcmp.events.AddRemoteCallable('adminsys/client/req/update_banlist', function(player) {
-
-  adminsys.mongodb.connect(adminsys.config.mongodb.url, function(err, db) {
-    var collection = db.collection('banlist');
-
-    collection.find({}).sort({ date_start: -1 }).limit(35).toArray(function(err, result) {
-      if(!err) {
-        /*console.log("BanList result:");
-        console.log(result);*/
-
-        jcmp.events.CallRemote('adminsys/server/res/update_banlist', player, JSON.stringify(result));
-      }
-      db.close();
-    });
-  });
+  
+  adminsys.databaseSys.updateBanlist(player);
 
 });
 
@@ -80,23 +68,7 @@ jcmp.events.AddRemoteCallable('adminsys/server/searchBanPlayer', function(player
     data.filter = 'steamId';
   }
 
-  adminsys.mongodb.connect(adminsys.config.mongodb.url, function(err, db) {
-
-    var collection = db.collection('banlist');
-
-    var findQuery = {};
-    // '' + data.filter + '': new RegExp('^' + data.value, 'i')
-    findQuery[data.filter] = new RegExp('^' + data.value, 'i');
-    //console.log(findQuery);
-
-    collection.find(findQuery).sort({ date_start: -1 }).limit(35).toArray(function(err, result) { // Limited to 35 more can crash server
-      //console.log(result);
-      if(!err) {
-        jcmp.events.CallRemote('adminsys/server/res/update_banlist', player, JSON.stringify(result));
-      }
-      db.close();
-    });
-  });
+  adminsys.databaseSys.searchBanPlayer(player, data);
 
 });
 

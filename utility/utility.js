@@ -154,6 +154,6 @@ module.exports = class Utility {
     static daysToMs(n) {
       return this.hoursToMs(24 * n);
     }
-
-
 };
+
+

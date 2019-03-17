@@ -9,11 +9,18 @@ module.exports = {
       orange: new RGB(255, 140, 0),
       purple: new RGB(220, 198, 224),
   },
+  databaseSys: 'localdb', // mongodb | mysql | localdb
   mongodb: {
-    url: 'mongodb://192.168.1.211:27017/adminsys'
+    url: 'mongodb://192.168.1.211:27017/jcmp_adminsys'
+  },
+  mysql: {
+    host: '192.168.1.211',
+    user: 'root',
+    password: 'root',
+    database: 'jcmp_adminsys',
   },
   admins: [
-    "76561198030848245"
+    "76561198030848245" // Daranix
   ],
   banonjoin: true // For debug purposes
 }
